@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: enterprise-api-mcp-gateway
+  ai:
+    mcp:
+      server:
+        enabled: true
+        name: enterprise-api-mcp-gateway
+        version: 1.0.0
+        type: ASYNC
+        protocol: STREAMABLE
+        instructions: Dynamically exposes configured OpenAPI operations as MCP tools.
+  codec:
+    max-in-memory-size: 2MB
+gateway:
+  operations:
+    allow-mutating: false
+  security:
+    allowed-hosts:
+      - api.example.com
+    allow-private-targets: false
+  limits:
+    connect-timeout: 3s
+    max-request-body-bytes: 1048576
+    max-response-body-bytes: 2097152
+  apis:
+    - name: example-service
+      base-url: https://api.example.com
+      openapi: classpath:openapi/example-api.yaml
+      timeout: 10s
+      auth:
+        type: none
