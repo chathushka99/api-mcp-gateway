@@ -14,19 +14,19 @@ spring:
     max-in-memory-size: 2MB
 gateway:
   operations:
-    allow-mutating: false
+    allow-mutating: true
   security:
     allowed-hosts:
-      - api.example.com
-    allow-private-targets: false
+      - localhost
+    allow-private-targets: true
   limits:
     connect-timeout: 3s
     max-request-body-bytes: 1048576
     max-response-body-bytes: 2097152
   apis:
-    - name: example-service
-      base-url: https://api.example.com
-      openapi: classpath:openapi/example-api.yaml
-      timeout: 10s
+    - name: file-storage
+      base-url: http://localhost:8081
+      openapi: classpath:openapi/file-storage-api.json
+      timeout: 30s
       auth:
         type: none

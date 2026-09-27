@@ -23,7 +23,7 @@ public class OpenApiSpecificationLoader {
 
     private static final int MAX_SPECIFICATION_BYTES = 5 * 1024 * 1024;
     private static final Pattern EXTERNAL_REFERENCE = Pattern.compile( // ls
-            "(?im)[\"']?\\$ref[\"']?\\s*:\\s*[\"']?(?!#)");
+            "(?im)[\"']?\\$ref[\"']?\\s*:\\s*(?:\"(?!#)[^\"]*\"|'(?!#)[^']*'|(?![#\"'\\s])\\S+)");
 
     private final ResourceLoader resourceLoader;
 

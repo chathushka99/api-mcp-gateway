@@ -90,6 +90,49 @@ class OpenApiSpecificationLoaderTest {
     }
 
     /**
+     * Verifies local component references are accepted and resolved.
+     *
+     * @throws Exception if the fixture cannot be written or loaded
+     */
+    @Test
+    @DisplayName("Loads local component references")
+    void loadsLocalComponentReferences() throws Exception {
+        // prepare //
+        final String yaml = """
+                openapi: 3.0.3
+                info:
+                  title: Local reference
+                  version: 1.0
+                paths:
+                  /health:
+                    get:
+                      responses:
+                        "200":
+                          description: OK
+                          content:
+                            application/json:
+                              schema:
+                                $ref: "#/components/schemas/Health"
+                components:
+                  schemas:
+                    Health:
+                      type: object
+                      properties:
+                        status:
+                          type: string
+                """;
+        final java.nio.file.Path source = this.temporaryDirectory.resolve("local-reference.yaml");
+        Files.writeString(source, yaml);
+        final OpenApiSpecificationLoader loader = new OpenApiSpecificationLoader(new DefaultResourceLoader());
+
+        // act //
+        final LoadedOpenApi loaded = loader.load(source.toUri().toString().replace("file:///", "file:/"));
+
+        // assert //
+        assertThat(loaded.openApi().getPaths()).containsKey("/health");
+    }
+
+    /**
      * Rejects unsupported resource schemes, missing documents, and malformed content.
      *
      * @throws Exception if a test document cannot be written
